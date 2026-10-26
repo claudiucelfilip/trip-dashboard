@@ -1,0 +1,220 @@
+{
+  "config": {
+    "type": "roadtrip",
+    "demo": true,
+    "tripName": "The coast, two ways",
+    "home": {
+      "name": "Lisbon",
+      "lat": 38.7223,
+      "lng": -9.1393
+    },
+    "car": {
+      "name": "Rental car",
+      "lPer100": 6.5,
+      "fuelPrice": 1.8,
+      "roadFactor": 1.25
+    },
+    "budgetMin": 80,
+    "budgetMax": 140,
+    "party": {
+      "adults": 2,
+      "kidsAges": []
+    }
+  },
+  "stops": [
+    {
+      "id": "evora",
+      "place": "Évora",
+      "lat": 38.5714,
+      "lng": -7.9135,
+      "checkin": "2027-05-10",
+      "checkout": "2027-05-12"
+    },
+    {
+      "id": "lagos",
+      "place": "Lagos",
+      "lat": 37.1028,
+      "lng": -8.673,
+      "checkin": "2027-05-12",
+      "checkout": "2027-05-15"
+    },
+    {
+      "id": "tavira",
+      "place": "Tavira",
+      "lat": 37.1273,
+      "lng": -7.6496,
+      "checkin": "2027-05-12",
+      "checkout": "2027-05-15"
+    },
+    {
+      "id": "setubal",
+      "place": "Setúbal",
+      "lat": 38.5244,
+      "lng": -8.8882,
+      "checkin": "2027-05-15",
+      "checkout": "2027-05-16"
+    }
+  ],
+  "slots": [
+    {
+      "id": "inland",
+      "candidateIds": [
+        "evora"
+      ],
+      "activeStopId": "evora"
+    },
+    {
+      "id": "coast",
+      "candidateIds": [
+        "lagos",
+        "tavira"
+      ],
+      "activeStopId": "lagos"
+    },
+    {
+      "id": "return",
+      "candidateIds": [
+        "setubal"
+      ],
+      "activeStopId": "setubal"
+    }
+  ],
+  "lodging": [
+    {
+      "id": "stay0",
+      "stopId": "evora",
+      "name": "Demo · Courtyard rooms",
+      "pricePerNight": 95,
+      "totalPrice": 190,
+      "status": "booked",
+      "notes": "Fictional stay. Quiet courtyard; parking estimate included.",
+      "area": "Synthetic example",
+      "rank": 1,
+      "availability": "unknown"
+    },
+    {
+      "id": "stay1",
+      "stopId": "evora",
+      "name": "Demo · Garden studio",
+      "pricePerNight": 120,
+      "totalPrice": 240,
+      "status": "shortlist",
+      "notes": "Fictional stay. Kitchenette; more space for a slower morning.",
+      "area": "Synthetic example",
+      "rank": 2,
+      "availability": "unknown"
+    },
+    {
+      "id": "stay2",
+      "stopId": "lagos",
+      "name": "Demo · Harbour apartment",
+      "pricePerNight": 130,
+      "totalPrice": 390,
+      "status": "booked",
+      "notes": "Fictional stay. Walkable base; three-night estimate.",
+      "area": "Synthetic example",
+      "rank": 3,
+      "availability": "unknown"
+    },
+    {
+      "id": "stay3",
+      "stopId": "lagos",
+      "name": "Demo · Dunes guesthouse",
+      "pricePerNight": 105,
+      "totalPrice": 315,
+      "status": "idea",
+      "notes": "Fictional stay. Lower cost; car needed for dinner.",
+      "area": "Synthetic example",
+      "rank": 4,
+      "availability": "unknown"
+    },
+    {
+      "id": "stay4",
+      "stopId": "tavira",
+      "name": "Demo · Riverside rooms",
+      "pricePerNight": 90,
+      "totalPrice": 270,
+      "status": "shortlist",
+      "notes": "Fictional alternative. Compare the quieter eastern coast.",
+      "area": "Synthetic example",
+      "rank": 5,
+      "availability": "unknown"
+    },
+    {
+      "id": "stay5",
+      "stopId": "setubal",
+      "name": "Demo · Old town loft",
+      "pricePerNight": 110,
+      "totalPrice": 110,
+      "status": "booked",
+      "notes": "Fictional stay. Final night before returning to Lisbon.",
+      "area": "Synthetic example",
+      "rank": 6,
+      "availability": "unknown"
+    }
+  ],
+  "days": [
+    {
+      "date": "2027-05-10",
+      "stopId": "evora",
+      "sleep": "Évora",
+      "plan": "Old town walk, then an unhurried dinner",
+      "workStatus": "afk"
+    },
+    {
+      "date": "2027-05-11",
+      "stopId": "evora",
+      "sleep": "Évora",
+      "plan": "Museum morning; afternoon left open",
+      "workStatus": "afk"
+    },
+    {
+      "date": "2027-05-12",
+      "stopId": "lagos",
+      "sleep": "Lagos",
+      "plan": "Drive to the coast, settle in",
+      "workStatus": "afk"
+    },
+    {
+      "date": "2027-05-13",
+      "stopId": "lagos",
+      "sleep": "Lagos",
+      "plan": "Clifftop walk if the weather allows",
+      "workStatus": "afk"
+    },
+    {
+      "date": "2027-05-14",
+      "stopId": "lagos",
+      "sleep": "Lagos",
+      "plan": "Beach morning; keep the evening free",
+      "workStatus": "afk"
+    },
+    {
+      "date": "2027-05-15",
+      "stopId": "setubal",
+      "sleep": "Setúbal",
+      "plan": "Return via the natural park",
+      "workStatus": "weekend"
+    },
+    {
+      "date": "2027-05-16",
+      "stopId": null,
+      "sleep": "Home",
+      "plan": "Coffee, pack, and drive home",
+      "workStatus": "weekend"
+    }
+  ],
+  "costs": [
+    {
+      "id": "meals",
+      "label": "Meals & groceries",
+      "amount": 300
+    },
+    {
+      "id": "visits",
+      "label": "Museum & park tickets",
+      "amount": 60
+    }
+  ],
+  "rev": 0
+}

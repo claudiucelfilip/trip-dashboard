@@ -1,0 +1,22 @@
+{
+  "name": "trip-dashboard",
+  "version": "1.0.0",
+  "description": "Local trip planning with interchangeable stops, lodging comparisons and budgets.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "demo": "TRIP_DEMO=1 node server.js",
+    "test": "node --test",
+    "check": "node --check server.js && node --check public/app.js && node --check public/home.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

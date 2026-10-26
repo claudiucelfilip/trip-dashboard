@@ -1,0 +1,13 @@
+node_modules/
+.env
+.env.*
+!.env.example
+data/
+state/
+*.log
+*.tmp
+.DS_Store
+playwright-report/
+test-results/
+pw-profile/
+context/

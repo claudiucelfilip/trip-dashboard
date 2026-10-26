@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trip Dashboard</title>
+  <link rel="stylesheet" href="vendor/leaflet.css">
+  <link rel="stylesheet" href="style.css?v=68">
+</head>
+<body>
+  <header>
+    <h1 id="trip-name">Family Trip</h1>
+    <p id="trip-meta"></p>
+    <p id="trip-total"></p>
+  </header>
+
+  <nav class="edition-bar"><a href="/">← All trips</a><span class="edition-status">Manual planning · no live price checks</span></nav>
+  <main>
+    <aside id="rail" class="rail">
+      <div id="map"></div>
+      <section id="budget-section">
+        <h2>Budget</h2>
+        <div id="budget"></div>
+      </section>
+    </aside>
+
+    <section id="itinerary-section">
+      <h2>Itinerary</h2>
+      <div id="itinerary"></div>
+      <button id="add-stop" class="btn-add">+ Add stop</button>
+    </section>
+
+    <section id="offers-section" hidden>
+      <h2>Offers</h2>
+      <div id="offers"></div>
+      <button id="add-offer" class="btn-add">+ Add offer</button>
+    </section>
+  </main>
+
+  <script src="vendor/leaflet.js"></script>
+  <script src="app.js?v=68"></script>
+</body>
+</html>
