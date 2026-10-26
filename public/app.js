@@ -706,9 +706,28 @@ function ensureMap() {
       wheelDebounceTime: 10,
     });
     if (data.config.capabilities?.network) {
-      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      const osm = () => L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a> · OSRM routes',
       }).addTo(map);
+      const fallback = osm();
+      if (data.config.mapsKey && L.gridLayer.googleMutant) {
+        let googleLayer;
+        const useFallback = () => {
+          if (googleLayer) map.removeLayer(googleLayer);
+          if (!map.hasLayer(fallback)) fallback.addTo(map);
+          document.querySelector('.edition-status').textContent = 'Google Maps unavailable · OpenStreetMap fallback · manual prices, no live checks';
+        };
+        window.gm_authFailure = useFallback;
+        window.__tripGoogleReady = () => {
+          googleLayer = L.gridLayer.googleMutant({ type: 'roadmap' });
+          googleLayer.once('load', () => map.removeLayer(fallback));
+          googleLayer.addTo(map);
+        };
+        const script = document.createElement('script');
+        script.src = 'https://maps.googleapis.com/maps/api/js?' + new URLSearchParams({ key: data.config.mapsKey, loading: 'async', callback: '__tripGoogleReady' });
+        script.onerror = useFallback;
+        document.head.appendChild(script);
+      }
     } else {
       map.attributionControl.addAttribution('Offline schematic · estimated distances');
     }
@@ -1010,9 +1029,7 @@ function candidateSummary(cand) {
   return { sub, price, score: best?.score ?? null };
 }
 
-// Adding is URL-only — paste a listing link and the browser visit fills in the
-// name, price, score, photo and availability. "enter details manually" opens the
-// full form for URL-less places (e.g. family house).
+// Save a listing link first, or open the full manual comparison form.
 function newLodgingForm(stopId) {
   return `
     <div class="lodging-card editing adding" data-stop="${esc(stopId)}">
@@ -1541,12 +1558,7 @@ async function changeStopPlace(id, place) {
   if (coords) await refresh(api('PUT', `stops/${id}`, coords));
 }
 
-// Google-Places typeahead for stop place inputs. Hardened as ONE page-level
-// controller with a single fixed-position overlay on <body>: it can't be clipped
-// by ancestor overflow, can't be overlapped by cards below (high z-index), and —
-// crucially — survives itinerary re-renders (background enrich saves rebuild the
-// stop DOM; a per-input dropdown would be orphaned mid-type). Inputs just wire
-// their events to this shared controller.
+// A shared overlay keeps suggestions visible through itinerary re-renders.
 const placeAC = (() => {
   const box = document.createElement('div');
   box.className = 'place-ac';
@@ -1554,6 +1566,7 @@ const placeAC = (() => {
   document.body.appendChild(box);
 
   let input = null, stopId = null, items = [], sel = -1, timer = null, seq = 0, picked = false;
+  let session = crypto.randomUUID();
 
   const position = () => {
     if (!input) return;
@@ -1565,7 +1578,7 @@ const placeAC = (() => {
   const hide = () => { box.style.display = 'none'; box.innerHTML = ''; items = []; sel = -1; };
   const paint = () => {
     box.innerHTML = items.map((it, i) =>
-      `<div class="place-ac-item${i === sel ? ' active' : ''}" data-i="${i}">${esc(it.description)}</div>`).join('');
+      `<div class="place-ac-item${i === sel ? ' active' : ''}" data-i="${i}">${esc(it.description)}</div>`).join('') + '<div class="place-ac-credit">Powered by Google</div>';
   };
   const show = () => { position(); box.style.display = 'block'; paint(); };
 
@@ -1577,8 +1590,10 @@ const placeAC = (() => {
     const qs = new URLSearchParams();
     if (it.placeId) qs.set('placeId', it.placeId);
     qs.set('q', desc);
+    qs.set('session', session);
     let det = null;
     try { det = await api('GET', `places/details?${qs}`); } catch (e) { /* fall back */ }
+    session = crypto.randomUUID();
     // Short name only: Google's `name`, else the first comma-segment of the
     // description — never the whole "…, city, region, 0" address string.
     // trim regardless of source — Nominatim names arrive as full "…, city, country" strings
@@ -1597,7 +1612,7 @@ const placeAC = (() => {
     const mine = ++seq;
     timer = setTimeout(async () => {
       let out = [];
-      try { out = await api('GET', `places/autocomplete?q=${encodeURIComponent(q)}`); } catch (e) { out = []; }
+      try { out = await api('GET', `places/autocomplete?q=${encodeURIComponent(q)}&session=${encodeURIComponent(session)}`); } catch (e) { out = []; }
       if (mine !== seq || document.activeElement !== input) return; // stale / input lost focus
       items = out || []; sel = -1;
       if (!items.length) return hide();
@@ -1753,7 +1768,7 @@ const expandedMatrix = new Set(); // offer ids with the date×price panel open
 function priceMatrixPanel(offer) {
   const rows = (offer.priceMatrix || []).slice().sort((a, b) => (a.date || '').localeCompare(b.date || ''));
   if (!rows.length) {
-    return `<div class="nearby matrix-panel"><p class="muted">No date-price table yet — ask the chat to capture the operator's date list for this offer.</p></div>`;
+    return `<div class="nearby matrix-panel"><p class="muted">No date-price alternatives entered yet. Add a priceMatrix through the JSON API; no provider lookup runs automatically.</p></div>`;
   }
   const prices = rows.map(r => Number(r.total)).filter(Boolean);
   const min = Math.min(...prices), max = Math.max(...prices);
@@ -1992,7 +2007,7 @@ function offerCard(offer) {
       </div>
       ${offer.climate?.tMax != null ? `
       <div class="lodging-meta climate-line">
-        <span title="Average daily max for the stay month (last year's normals)">🌡 ${offer.climate.tMax}°</span>
+        <span title="Entered average daily maximum; synthetic estimate in demo">🌡 ${offer.climate.tMax}°</span>
         ${offer.climate.seaTemp != null ? `<span title="Average sea surface temperature">🌊 ${offer.climate.seaTemp}°</span>` : ''}
         ${offer.climate.rainDays != null ? `<span title="Days with ≥1mm rain in the month">🌧 ${offer.climate.rainDays}d rain</span>` : ''}
       </div>` : ''}

@@ -39,7 +39,7 @@ All API endpoints are under `/<slug>/api/`. Unknown trips return 404. Only files
 | `POST costs`, `PUT/DELETE costs/:id` | Extra budget items |
 | `POST offers`, `PUT/DELETE offers/:id`, `PUT offers-order` | Package offers |
 | `POST departures`, `PUT/DELETE departures/:id` | Departure estimates |
-| `GET places/autocomplete` | Empty suggestions; place names remain editable |
+| `GET places/autocomplete`, `GET places/details` | Configured Google Places suggestions and coordinates; empty/unavailable offline |
 | Other API routes | 501 with an explanation; research/chat workers are not included |
 
 JSON requests are limited to 256 KB. IDs are server managed, slugs are bounded, link schemes and date inputs are checked, and duplicate reorder IDs are rejected. Cross-site writes and non-local Host headers are rejected. Errors exclude request bodies, file paths and integration credentials.
@@ -53,6 +53,6 @@ npm test
 npm audit --omit=dev
 ```
 
-Tests start a real HTTP server with isolated temporary state and synthetic fixtures. CI runs the same checks on Node 22 and 24. No tests contact travel providers. For manual validation, use the demo: select a lodging card, swap the coastal alternative, save a day plan, reload, clone a trip, and compare package dates and totals.
+Tests start a real HTTP server with isolated temporary state and synthetic fixtures. CI runs the same checks on Node 22 and 24. No tests contact travel providers. Runtime-only Google browser configuration is returned from the data endpoint only in online mode; the server-side Places key is never returned. Places API (New) is the default; an explicit legacy mode preserves existing provider projects. For manual validation, use the demo: select a lodging card, swap the coastal alternative, save a day plan, reload, clone a trip, and compare package dates and totals.
 
 To set a starting point or other settings without a dedicated form, use `PUT /<slug>/api/config` with JSON such as `{"home":{"name":"Starting point","lat":40,"lng":-8}}`. Coordinates for individual stops are editable in the UI. A new blank trip has no starting coordinates and therefore no home leg until configured.

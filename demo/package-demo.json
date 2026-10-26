@@ -4,9 +4,9 @@
     "demo": true,
     "tripName": "A week by the sea",
     "home": {
-      "name": "Starting point",
-      "lat": null,
-      "lng": null
+      "name": "Lisbon (demo starting point)",
+      "lat": 38.7223,
+      "lng": -9.1393
     },
     "car": {
       "name": "Rental car",
@@ -18,31 +18,46 @@
     "budgetMax": 140,
     "party": {
       "adults": 2,
-      "kidsAges": []
+      "kidsAges": [
+        10
+      ]
     },
-    "budgetTotal": 2400,
+    "budgetTotal": 2600,
     "weights": {
       "price": 2,
-      "includes": 1,
-      "reviews": 0,
-      "climate": 0,
+      "includes": 1.5,
+      "reviews": 1,
+      "climate": 0.5,
       "departure": 1
     }
   },
   "departures": [
     {
       "id": "near",
-      "city": "Nearby airport (demo)",
-      "airport": "NEAR",
+      "city": "Lisbon · synthetic access estimate",
+      "airport": "LIS",
+      "lat": 38.7756,
+      "lng": -9.1354,
       "driveKm": 35,
       "parkingPerDay": 8
     },
     {
       "id": "far",
-      "city": "Regional airport (demo)",
-      "airport": "FAR",
-      "driveKm": 180,
+      "city": "Porto · synthetic access estimate",
+      "airport": "OPO",
+      "lat": 41.2481,
+      "lng": -8.6814,
+      "driveKm": 310,
       "parkingPerDay": 6
+    },
+    {
+      "id": "south",
+      "city": "Faro · synthetic access estimate",
+      "airport": "FAO",
+      "lat": 37.0144,
+      "lng": -7.9659,
+      "driveKm": 280,
+      "parkingPerDay": 5
     }
   ],
   "offers": [
@@ -50,9 +65,12 @@
       "id": "offer0",
       "resort": {
         "name": "Demo · Cove resort",
-        "destination": "Coastal bay",
-        "country": "Synthetic destination",
-        "photos": []
+        "destination": "Tavira",
+        "country": "Portugal",
+        "photos": [],
+        "lat": 37.1273,
+        "lng": -7.6496,
+        "stars": 4
       },
       "price": {
         "total": 1850,
@@ -62,21 +80,46 @@
       },
       "includes": {
         "transfer": true,
-        "pools": true
+        "pools": true,
+        "beachType": "sandy",
+        "kidsClub": true,
+        "wifi": true,
+        "parking": false
       },
       "urls": {},
-      "reviews": {},
+      "reviews": {
+        "booking": {
+          "score": 8.9,
+          "count": 120
+        },
+        "google": {
+          "score": 4.5,
+          "count": 210
+        },
+        "snippets": [
+          {
+            "source": "Fictional demo review · not a provider quote",
+            "author": "Demo traveller",
+            "text": "Easy family days; the shaded pool was a welcome break. Invented demo review."
+          }
+        ]
+      },
       "checkin": "2027-06-05",
       "nights": 7,
       "board": "HB",
       "departureId": "near",
       "kind": "package",
-      "source": "Synthetic example",
-      "notes": "Fictional package. Short transfer; breakfast and dinner included.",
+      "source": "Synthetic offer · not bookable",
+      "notes": "All ratings, review counts, weather figures, availability and prices are invented for demonstrating comparison. No actual hotel or offer is represented.",
       "status": "booked",
       "rank": 1,
       "availability": "unknown",
       "priceMatrix": [
+        {
+          "date": "2027-05-29",
+          "total": 1730,
+          "nights": 7
+        },
         {
           "date": "2027-06-05",
           "total": 1850,
@@ -86,16 +129,31 @@
           "date": "2027-06-12",
           "total": 1990,
           "nights": 7
+        },
+        {
+          "date": "2027-06-19",
+          "total": 2110,
+          "nights": 7
         }
-      ]
+      ],
+      "favorite": true,
+      "climate": {
+        "tMax": 25,
+        "seaTemp": 20,
+        "rainDays": 2
+      },
+      "verdict": "Strong all-round choice for a family week; short access journey offsets the higher room price."
     },
     {
       "id": "offer1",
       "resort": {
         "name": "Demo · Palm gardens",
-        "destination": "Garden coast",
-        "country": "Synthetic destination",
-        "photos": []
+        "destination": "Albufeira",
+        "country": "Portugal",
+        "photos": [],
+        "lat": 37.089,
+        "lng": -8.247,
+        "stars": 4
       },
       "price": {
         "total": 1640,
@@ -105,21 +163,46 @@
       },
       "includes": {
         "transfer": true,
-        "pools": true
+        "pools": true,
+        "beachType": "mixed",
+        "kidsClub": false,
+        "wifi": true,
+        "parking": false
       },
       "urls": {},
-      "reviews": {},
+      "reviews": {
+        "booking": {
+          "score": 8.6,
+          "count": 155
+        },
+        "google": {
+          "score": 4.4,
+          "count": 250
+        },
+        "snippets": [
+          {
+            "source": "Fictional demo review · not a provider quote",
+            "author": "Demo traveller",
+            "text": "Peaceful garden; allow extra time to reach the beach. Invented demo review."
+          }
+        ]
+      },
       "checkin": "2027-06-05",
       "nights": 7,
       "board": "BB",
       "departureId": "far",
       "kind": "package",
-      "source": "Synthetic example",
-      "notes": "Fictional package. Lower headline price; longer drive to the airport.",
+      "source": "Synthetic offer · not bookable",
+      "notes": "All ratings, review counts, weather figures, availability and prices are invented for demonstrating comparison. No actual hotel or offer is represented.",
       "status": "shortlist",
       "rank": 2,
       "availability": "unknown",
       "priceMatrix": [
+        {
+          "date": "2027-05-29",
+          "total": 1520,
+          "nights": 7
+        },
         {
           "date": "2027-06-05",
           "total": 1640,
@@ -129,16 +212,31 @@
           "date": "2027-06-12",
           "total": 1780,
           "nights": 7
+        },
+        {
+          "date": "2027-06-19",
+          "total": 1900,
+          "nights": 7
         }
-      ]
+      ],
+      "favorite": false,
+      "climate": {
+        "tMax": 26,
+        "seaTemp": 21,
+        "rainDays": 3
+      },
+      "verdict": "Lowest package price; airport access and breakfast-only board narrow the saving."
     },
     {
       "id": "offer2",
       "resort": {
         "name": "Demo · Sandstone beach",
-        "destination": "Seaside town",
-        "country": "Synthetic destination",
-        "photos": []
+        "destination": "Lagos",
+        "country": "Portugal",
+        "photos": [],
+        "lat": 37.1028,
+        "lng": -8.673,
+        "stars": 4
       },
       "price": {
         "total": 2160,
@@ -148,21 +246,46 @@
       },
       "includes": {
         "transfer": true,
-        "pools": true
+        "pools": true,
+        "beachType": "sandy",
+        "kidsClub": true,
+        "wifi": true,
+        "parking": false
       },
       "urls": {},
-      "reviews": {},
+      "reviews": {
+        "booking": {
+          "score": 8.3,
+          "count": 190
+        },
+        "google": {
+          "score": 4.3,
+          "count": 290
+        },
+        "snippets": [
+          {
+            "source": "Fictional demo review · not a provider quote",
+            "author": "Demo traveller",
+            "text": "Good beach access and a broad dinner choice. Invented demo review."
+          }
+        ]
+      },
       "checkin": "2027-06-05",
       "nights": 7,
       "board": "AI",
       "departureId": "near",
       "kind": "package",
-      "source": "Synthetic example",
-      "notes": "Fictional package. Higher price; most meals included.",
+      "source": "Synthetic offer · not bookable",
+      "notes": "All ratings, review counts, weather figures, availability and prices are invented for demonstrating comparison. No actual hotel or offer is represented.",
       "status": "shortlist",
       "rank": 3,
       "availability": "unknown",
       "priceMatrix": [
+        {
+          "date": "2027-05-29",
+          "total": 2040,
+          "nights": 7
+        },
         {
           "date": "2027-06-05",
           "total": 2160,
@@ -172,15 +295,120 @@
           "date": "2027-06-12",
           "total": 2300,
           "nights": 7
+        },
+        {
+          "date": "2027-06-19",
+          "total": 2420,
+          "nights": 7
         }
-      ]
+      ],
+      "favorite": true,
+      "climate": {
+        "tMax": 27,
+        "seaTemp": 20,
+        "rainDays": 2
+      },
+      "verdict": "Premium beach option; compare the full cost before trading away the budget buffer."
+    },
+    {
+      "id": "offer3",
+      "resort": {
+        "name": "Demo · Marina courtyard",
+        "destination": "Faro",
+        "country": "Portugal",
+        "photos": [],
+        "lat": 37.019,
+        "lng": -7.93,
+        "stars": 3
+      },
+      "price": {
+        "total": 1490,
+        "currency": "EUR",
+        "includesFlight": true,
+        "includesTransfer": true
+      },
+      "includes": {
+        "transfer": false,
+        "pools": true,
+        "beachType": "mixed",
+        "kidsClub": false,
+        "wifi": true,
+        "parking": true
+      },
+      "urls": {},
+      "reviews": {
+        "booking": {
+          "score": 8.0,
+          "count": 225
+        },
+        "google": {
+          "score": 4.2,
+          "count": 330
+        },
+        "snippets": [
+          {
+            "source": "Fictional demo review · not a provider quote",
+            "author": "Demo traveller",
+            "text": "Flexible kitchen base; transfers are separate. Invented demo review."
+          }
+        ]
+      },
+      "checkin": "2027-06-05",
+      "nights": 7,
+      "board": "SC",
+      "departureId": "south",
+      "kind": "diy",
+      "source": "Synthetic offer · not bookable",
+      "notes": "All ratings, review counts, weather figures, availability and prices are invented for demonstrating comparison. No actual hotel or offer is represented.",
+      "status": "idea",
+      "rank": 4,
+      "availability": "unknown",
+      "priceMatrix": [
+        {
+          "date": "2027-05-29",
+          "total": 1370,
+          "nights": 7
+        },
+        {
+          "date": "2027-06-05",
+          "total": 1490,
+          "nights": 7
+        },
+        {
+          "date": "2027-06-12",
+          "total": 1630,
+          "nights": 7
+        },
+        {
+          "date": "2027-06-19",
+          "total": 1750,
+          "nights": 7
+        }
+      ],
+      "favorite": false,
+      "climate": {
+        "tMax": 28,
+        "seaTemp": 21,
+        "rainDays": 3
+      },
+      "verdict": "DIY alternative with more flexibility; leave a separate allowance for transfers and meals."
     }
   ],
   "costs": [
     {
       "id": "extras",
       "label": "Meals outside the package",
-      "amount": 120
+      "amount": 180
+    },
+    {
+      "id": "insurance",
+      "label": "Travel insurance allowance",
+      "amount": 65
+    },
+    {
+      "id": "excursions",
+      "label": "Two local excursions",
+      "amount": 110
     }
   ],
   "researchJobs": [],

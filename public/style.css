@@ -880,3 +880,5 @@ body.is-dragging a { pointer-events: none; }
 button.alt-radio{padding:0;background:transparent;cursor:pointer}button:focus-visible,a:focus-visible{outline:2px solid #2563eb;outline-offset:3px}
 
 .map-empty-message{display:none}#map.map-empty-view{height:180px;min-height:180px}.map-empty-view .leaflet-control-container{display:none}.map-empty-view .map-empty-message{display:flex;position:absolute;inset:0;z-index:500;align-items:center;justify-content:center;padding:32px;text-align:center;font:14px/1.5 system-ui;color:#526458;background:#e8ede6}
+
+.place-ac-credit { padding: 8px 12px; color: #526458; font-size: 12px; text-align: right; border-top: 1px solid #e4e2dc; }

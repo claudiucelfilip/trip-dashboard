@@ -10,6 +10,9 @@ const AUTH_USER = process.env.TRIP_USER;
 const AUTH_PASS = process.env.TRIP_PASS;
 if (!!AUTH_USER !== !!AUTH_PASS) throw new Error('Set both TRIP_USER and TRIP_PASS, or neither for local use.');
 const NETWORK = process.env.TRIP_NETWORK === '1';
+const MAPS_KEY = process.env.GOOGLE_MAPS_BROWSER_KEY || '';
+const PLACES_KEY = process.env.GOOGLE_PLACES_API_KEY || '';
+const PLACES_LEGACY = process.env.GOOGLE_PLACES_API_MODE === 'legacy';
 const SLUG_RE = /^[a-z0-9][a-z0-9-]{0,79}$/;
 function dataFile(slug) {
   if (!SLUG_RE.test(slug)) throw new Error('Invalid trip slug');
@@ -29,7 +32,7 @@ if (process.env.TRIP_DEMO === '1') {
 const app = express();
 app.disable('x-powered-by');
 app.use((req, res, next) => {
-  res.set({ 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': NETWORK ? 'strict-origin-when-cross-origin' : 'same-origin', 'X-Frame-Options': 'DENY', 'Content-Security-Policy': `default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:${NETWORK ? ' https://tile.openstreetmap.org' : ''}; connect-src 'self'${NETWORK ? ' https://router.project-osrm.org' : ''}; frame-ancestors 'none'; base-uri 'self'; form-action 'self'` });
+  res.set({ 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': NETWORK ? 'strict-origin-when-cross-origin' : 'same-origin', 'X-Frame-Options': 'DENY', 'Content-Security-Policy': `default-src 'self'; script-src 'self'${NETWORK && MAPS_KEY ? ' https://maps.googleapis.com https://maps.gstatic.com' : ''}; style-src 'self' 'unsafe-inline'${NETWORK && MAPS_KEY ? ' https://fonts.googleapis.com' : ''}; font-src 'self'${NETWORK && MAPS_KEY ? ' https://fonts.gstatic.com' : ''}; img-src 'self' data:${NETWORK ? ' https://tile.openstreetmap.org' + (MAPS_KEY ? ' https://*.googleapis.com https://*.gstatic.com https://*.google.com https://*.googleusercontent.com' : '') : ''}; connect-src 'self'${NETWORK ? ' https://router.project-osrm.org' + (MAPS_KEY ? ' https://*.googleapis.com https://*.gstatic.com https://*.google.com' : '') : ''}; frame-ancestors 'none'; base-uri 'self'; form-action 'self'` });
   // Reject DNS rebinding and cross-site writes, even on a local server.
   if (!['127.0.0.1', 'localhost', '[::1]'].includes(req.hostname)) return res.status(403).json({ error: 'Local host required' });
   if (!['GET', 'HEAD', 'OPTIONS'].includes(req.method)) {
@@ -45,6 +48,18 @@ app.use((req, res, next) => {
   if (crypto.timingSafeEqual(a, b)) return next();
   res.set('WWW-Authenticate', 'Basic realm="Trip Dashboard"');
   res.status(401).send('Authentication required');
+});
+app.use((req, res, next) => {
+  const json = res.json.bind(res);
+  res.json = body => {
+    if (body?.config) {
+      body = { ...body, config: { ...body.config, capabilities: { network: NETWORK, places: NETWORK && !!PLACES_KEY } } };
+      delete body.config.mapsKey;
+      if (NETWORK && MAPS_KEY) body.config.mapsKey = MAPS_KEY;
+    }
+    return json(body);
+  };
+  next();
 });
 app.use(express.json({ limit: '256kb' }));
 app.use(express.urlencoded({ extended: false, limit: '16kb' }));
@@ -253,8 +268,6 @@ function rebuildDays(P) {
 // --- API ---
 app.get(`${BASE}/api/data`, (req, res) => {
   const data = load(req.params.slug);
-  // Runtime capability flags never enter saved trip files.
-  data.config.capabilities = { network: NETWORK }; 
   res.json(data);
 });
 
@@ -727,8 +740,49 @@ app.delete(`${BASE}/api/departures/:id`, (req, res) => {
 
 // Regenerate nearby places for one lodging item (also used as backfill target)
 
-app.get(`${BASE}/api/places/autocomplete`, (req, res) => res.json([]));
-app.get(`${BASE}/api/places/details`, (req, res) => res.status(501).json({ error: 'Enter coordinates manually; place lookup is not configured.' }));
+async function placesRequest(endpoint, options = {}) {
+  const response = await fetch('https://places.googleapis.com/v1/' + endpoint, {
+    ...options, signal: AbortSignal.timeout(8000),
+    headers: { 'Content-Type': 'application/json', 'X-Goog-Api-Key': PLACES_KEY, ...options.headers },
+  });
+  if (!response.ok) throw new Error('Place lookup unavailable');
+  return response.json();
+}
+async function legacyPlaces(type, params) {
+  const query = new URLSearchParams({ ...params, key: PLACES_KEY });
+  const response = await fetch('https://maps.googleapis.com/maps/api/place/' + type + '/json?' + query, { signal: AbortSignal.timeout(8000) });
+  const result = await response.json();
+  if (!response.ok || !['OK', 'ZERO_RESULTS'].includes(result.status)) throw new Error('Place lookup unavailable');
+  return result;
+}
+app.get(`${BASE}/api/places/autocomplete`, async (req, res) => {
+  if (!NETWORK || !PLACES_KEY) return res.json([]);
+  const q = String(req.query.q || '').trim();
+  if (q.length < 3 || q.length > 200) return res.json([]);
+  const token = String(req.query.session || '').slice(0, 80);
+  try {
+    if (PLACES_LEGACY) {
+      const result = await legacyPlaces('autocomplete', { input: q, types: 'geocode', ...(token ? { sessiontoken: token } : {}) });
+      return res.json((result.predictions || []).slice(0, 6).map(p => ({ description: p.description, placeId: p.place_id })));
+    }
+    const result = await placesRequest('places:autocomplete', { method: 'POST', body: JSON.stringify({ input: q, ...(token ? {sessionToken: token} : {}) }) });
+    res.json((result.suggestions || []).filter(s => s.placePrediction).slice(0, 6).map(s => ({ description: s.placePrediction.text.text, placeId: s.placePrediction.placeId })));
+  } catch { res.status(502).json({ error: 'Place suggestions unavailable. Enter coordinates manually.' }); }
+});
+app.get(`${BASE}/api/places/details`, async (req, res) => {
+  if (!NETWORK || !PLACES_KEY) return res.status(501).json({ error: 'Enter coordinates manually; place lookup is not configured.' });
+  const id = String(req.query.placeId || '');
+  if (!/^[a-zA-Z0-9_-]{1,256}$/.test(id)) return res.status(400).json({ error: 'Select a place suggestion first.' });
+  const token = String(req.query.session || '').slice(0, 80);
+  try {
+    if (PLACES_LEGACY) {
+      const { result: place } = await legacyPlaces('details', { place_id: id, fields: 'name,geometry,formatted_address', ...(token ? { sessiontoken: token } : {}) });
+      return res.json({ name: place.name, lat: place.geometry.location.lat, lng: place.geometry.location.lng, address: place.formatted_address || '' });
+    }
+    const place = await placesRequest('places/' + encodeURIComponent(id) + (token ? '?sessionToken=' + encodeURIComponent(token) : ''), { headers: { 'X-Goog-FieldMask': 'displayName,location,formattedAddress' } });
+    res.json({ name: place.displayName?.text || '', lat: place.location.latitude, lng: place.location.longitude, address: place.formattedAddress || '' });
+  } catch { res.status(502).json({ error: 'Place lookup unavailable. Enter coordinates manually.' }); }
+});
 app.use(`${BASE}/api`, (req, res) => res.status(501).json({ error: 'Online research and assistant automation are not included. Enter details manually and verify prices with the provider.' }));
 
 app.use(`${BASE}`, express.static(path.join(__dirname, 'public'), {
@@ -957,7 +1011,7 @@ app.get('/', (req, res) => {
         <label><input type="radio" name="type" value="package"><span>🏖 Package<br><small style="font-weight:400;color:var(--muted)">resort & flight deals</small></span></label>
       </div>
       <label for="slug-input">Trip name (URL slug)</label>
-      <input id="slug-input" name="slug" placeholder="vienna-city-break" pattern="[a-z0-9-]+" required autofocus>
+      <input id="slug-input" name="slug" placeholder="vienna-city-break" pattern="[a-z0-9\\-]+" required autofocus>
       <div class="actions">
         <button type="button" data-close-dialog>Cancel</button>
         <button type="submit" class="primary">Create trip</button>
@@ -970,7 +1024,7 @@ app.get('/', (req, res) => {
       <p>Keep this plan and create an independent copy.</p>
       <input type="hidden" name="source">
       <label for="clone-slug">New trip name (URL slug)</label>
-      <input id="clone-slug" name="slug" pattern="[a-z0-9-]+" maxlength="80" required>
+      <input id="clone-slug" name="slug" pattern="[a-z0-9\\-]+" maxlength="80" required>
       <div class="actions"><button type="button" data-close-dialog>Cancel</button><button type="submit" class="primary">Create copy</button></div>
     </form>
   </dialog>

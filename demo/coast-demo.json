@@ -18,8 +18,12 @@
     "budgetMax": 140,
     "party": {
       "adults": 2,
-      "kidsAges": []
-    }
+      "kidsAges": [
+        10
+      ]
+    },
+    "returnBy": "train",
+    "returnCost": 46
   },
   "stops": [
     {
@@ -36,7 +40,8 @@
       "lat": 37.1028,
       "lng": -8.673,
       "checkin": "2027-05-12",
-      "checkout": "2027-05-15"
+      "checkout": "2027-05-15",
+      "lodgingNote": "Compare Lagos for walking access, Tavira for a quiet base, Sagres for coastal walks. Keep all three until dates are firm."
     },
     {
       "id": "tavira",
@@ -52,14 +57,60 @@
       "lat": 38.5244,
       "lng": -8.8882,
       "checkin": "2027-05-15",
-      "checkout": "2027-05-16"
+      "checkout": "2027-05-16",
+      "arriveBy": "bus",
+      "legCost": 78
+    },
+    {
+      "id": "monsaraz",
+      "place": "Monsaraz",
+      "lat": 38.443,
+      "lng": -7.381,
+      "checkin": "2027-05-10",
+      "checkout": "2027-05-12"
+    },
+    {
+      "id": "sagres",
+      "place": "Sagres",
+      "lat": 37.007,
+      "lng": -8.939,
+      "checkin": "2027-05-12",
+      "checkout": "2027-05-15"
+    },
+    {
+      "id": "nazare",
+      "place": "Nazaré",
+      "lat": 39.602,
+      "lng": -9.07,
+      "checkin": "2027-05-16",
+      "checkout": "2027-05-19",
+      "arriveBy": "drive"
+    },
+    {
+      "id": "obidos",
+      "place": "Óbidos",
+      "lat": 39.36,
+      "lng": -9.157,
+      "checkin": "2027-05-16",
+      "checkout": "2027-05-19"
+    },
+    {
+      "id": "sintra",
+      "place": "Sintra",
+      "lat": 38.798,
+      "lng": -9.391,
+      "checkin": "2027-05-19",
+      "checkout": "2027-05-21",
+      "arriveBy": "train",
+      "legCost": 62
     }
   ],
   "slots": [
     {
       "id": "inland",
       "candidateIds": [
-        "evora"
+        "evora",
+        "monsaraz"
       ],
       "activeStopId": "evora"
     },
@@ -67,7 +118,8 @@
       "id": "coast",
       "candidateIds": [
         "lagos",
-        "tavira"
+        "tavira",
+        "sagres"
       ],
       "activeStopId": "lagos"
     },
@@ -77,6 +129,21 @@
         "setubal"
       ],
       "activeStopId": "setubal"
+    },
+    {
+      "id": "atlantic",
+      "candidateIds": [
+        "nazare",
+        "obidos"
+      ],
+      "activeStopId": "nazare"
+    },
+    {
+      "id": "palaces",
+      "candidateIds": [
+        "sintra"
+      ],
+      "activeStopId": "sintra"
     }
   ],
   "lodging": [
@@ -90,7 +157,19 @@
       "notes": "Fictional stay. Quiet courtyard; parking estimate included.",
       "area": "Synthetic example",
       "rank": 1,
-      "availability": "unknown"
+      "availability": "unknown",
+      "verdict": "Best balance of space and walking access; parking needs checking.",
+      "favorite": true,
+      "score": 8.1,
+      "reviews": {
+        "snippets": [
+          {
+            "source": "Fictional demo review",
+            "author": "Demo traveller",
+            "text": "A calm base for an early start. This quote is invented."
+          }
+        ]
+      }
     },
     {
       "id": "stay1",
@@ -102,7 +181,19 @@
       "notes": "Fictional stay. Kitchenette; more space for a slower morning.",
       "area": "Synthetic example",
       "rank": 2,
-      "availability": "unknown"
+      "availability": "unknown",
+      "verdict": "More room, higher cost. Keep as the rainy-day alternative.",
+      "favorite": false,
+      "score": 8.3,
+      "reviews": {
+        "snippets": [
+          {
+            "source": "Fictional demo review",
+            "author": "Demo traveller",
+            "text": "Room to cook and unpack. Synthetic review for the demo."
+          }
+        ]
+      }
     },
     {
       "id": "stay2",
@@ -114,7 +205,19 @@
       "notes": "Fictional stay. Walkable base; three-night estimate.",
       "area": "Synthetic example",
       "rank": 3,
-      "availability": "unknown"
+      "availability": "unknown",
+      "verdict": "Good walking base; retain budget for local transfers.",
+      "favorite": true,
+      "score": 8.5,
+      "reviews": {
+        "snippets": [
+          {
+            "source": "Fictional demo review",
+            "author": "Demo traveller",
+            "text": "A calm base for an early start. This quote is invented."
+          }
+        ]
+      }
     },
     {
       "id": "stay3",
@@ -126,7 +229,19 @@
       "notes": "Fictional stay. Lower cost; car needed for dinner.",
       "area": "Synthetic example",
       "rank": 4,
-      "availability": "unknown"
+      "availability": "unknown",
+      "verdict": "Best balance of space and walking access; parking needs checking.",
+      "favorite": false,
+      "score": 8.7,
+      "reviews": {
+        "snippets": [
+          {
+            "source": "Fictional demo review",
+            "author": "Demo traveller",
+            "text": "Room to cook and unpack. Synthetic review for the demo."
+          }
+        ]
+      }
     },
     {
       "id": "stay4",
@@ -138,7 +253,19 @@
       "notes": "Fictional alternative. Compare the quieter eastern coast.",
       "area": "Synthetic example",
       "rank": 5,
-      "availability": "unknown"
+      "availability": "unknown",
+      "verdict": "More room, higher cost. Keep as the rainy-day alternative.",
+      "favorite": false,
+      "score": 8.9,
+      "reviews": {
+        "snippets": [
+          {
+            "source": "Fictional demo review",
+            "author": "Demo traveller",
+            "text": "A calm base for an early start. This quote is invented."
+          }
+        ]
+      }
     },
     {
       "id": "stay5",
@@ -150,7 +277,187 @@
       "notes": "Fictional stay. Final night before returning to Lisbon.",
       "area": "Synthetic example",
       "rank": 6,
-      "availability": "unknown"
+      "availability": "unknown",
+      "verdict": "Good walking base; retain budget for local transfers.",
+      "favorite": false,
+      "score": 8.1,
+      "reviews": {
+        "snippets": [
+          {
+            "source": "Fictional demo review",
+            "author": "Demo traveller",
+            "text": "Room to cook and unpack. Synthetic review for the demo."
+          }
+        ]
+      }
+    },
+    {
+      "id": "stay6",
+      "stopId": "monsaraz",
+      "name": "Demo · Hilltop courtyard",
+      "pricePerNight": 115,
+      "totalPrice": 230,
+      "status": "shortlist",
+      "rank": 7,
+      "availability": "unknown",
+      "notes": "Fictional stay. Entered estimate for comparing this route; not a real property.",
+      "area": "Synthetic example",
+      "favorite": false,
+      "verdict": "Best balance of space and walking access; parking needs checking.",
+      "score": 8.3,
+      "reviews": {
+        "snippets": [
+          {
+            "source": "Fictional demo review",
+            "author": "Demo traveller",
+            "text": "A calm base for an early start. This quote is invented."
+          }
+        ]
+      }
+    },
+    {
+      "id": "stay7",
+      "stopId": "sagres",
+      "name": "Demo · Cape cabins",
+      "pricePerNight": 108,
+      "totalPrice": 324,
+      "status": "shortlist",
+      "rank": 8,
+      "availability": "unknown",
+      "notes": "Fictional stay. Entered estimate for comparing this route; not a real property.",
+      "area": "Synthetic example",
+      "favorite": false,
+      "verdict": "More room, higher cost. Keep as the rainy-day alternative.",
+      "score": 8.5,
+      "reviews": {
+        "snippets": [
+          {
+            "source": "Fictional demo review",
+            "author": "Demo traveller",
+            "text": "Room to cook and unpack. Synthetic review for the demo."
+          }
+        ]
+      }
+    },
+    {
+      "id": "stay8",
+      "stopId": "nazare",
+      "name": "Demo · Bay window apartment",
+      "pricePerNight": 125,
+      "totalPrice": 375,
+      "status": "booked",
+      "rank": 9,
+      "availability": "unknown",
+      "notes": "Fictional stay. Entered estimate for comparing this route; not a real property.",
+      "area": "Synthetic example",
+      "favorite": true,
+      "verdict": "Good walking base; retain budget for local transfers.",
+      "score": 8.7,
+      "reviews": {
+        "snippets": [
+          {
+            "source": "Fictional demo review",
+            "author": "Demo traveller",
+            "text": "A calm base for an early start. This quote is invented."
+          }
+        ]
+      }
+    },
+    {
+      "id": "stay9",
+      "stopId": "nazare",
+      "name": "Demo · Pine court rooms",
+      "pricePerNight": 94,
+      "totalPrice": 282,
+      "status": "shortlist",
+      "rank": 10,
+      "availability": "unknown",
+      "notes": "Fictional stay. Entered estimate for comparing this route; not a real property.",
+      "area": "Synthetic example",
+      "favorite": false,
+      "verdict": "Best balance of space and walking access; parking needs checking.",
+      "score": 8.9,
+      "reviews": {
+        "snippets": [
+          {
+            "source": "Fictional demo review",
+            "author": "Demo traveller",
+            "text": "Room to cook and unpack. Synthetic review for the demo."
+          }
+        ]
+      }
+    },
+    {
+      "id": "stay10",
+      "stopId": "obidos",
+      "name": "Demo · Walled garden studio",
+      "pricePerNight": 119,
+      "totalPrice": 357,
+      "status": "shortlist",
+      "rank": 11,
+      "availability": "unknown",
+      "notes": "Fictional stay. Entered estimate for comparing this route; not a real property.",
+      "area": "Synthetic example",
+      "favorite": false,
+      "verdict": "More room, higher cost. Keep as the rainy-day alternative.",
+      "score": 8.1,
+      "reviews": {
+        "snippets": [
+          {
+            "source": "Fictional demo review",
+            "author": "Demo traveller",
+            "text": "A calm base for an early start. This quote is invented."
+          }
+        ]
+      }
+    },
+    {
+      "id": "stay11",
+      "stopId": "sintra",
+      "name": "Demo · Fern house",
+      "pricePerNight": 140,
+      "totalPrice": 280,
+      "status": "booked",
+      "rank": 12,
+      "availability": "unknown",
+      "notes": "Fictional stay. Entered estimate for comparing this route; not a real property.",
+      "area": "Synthetic example",
+      "favorite": false,
+      "verdict": "Good walking base; retain budget for local transfers.",
+      "score": 8.3,
+      "reviews": {
+        "snippets": [
+          {
+            "source": "Fictional demo review",
+            "author": "Demo traveller",
+            "text": "Room to cook and unpack. Synthetic review for the demo."
+          }
+        ]
+      }
+    },
+    {
+      "id": "stay12",
+      "stopId": "sintra",
+      "name": "Demo · Hillside annexe",
+      "pricePerNight": 105,
+      "totalPrice": 210,
+      "status": "shortlist",
+      "rank": 13,
+      "availability": "unknown",
+      "notes": "Fictional stay. Entered estimate for comparing this route; not a real property.",
+      "area": "Synthetic example",
+      "favorite": false,
+      "verdict": "Best balance of space and walking access; parking needs checking.",
+      "score": 8.5,
+      "reviews": {
+        "snippets": [
+          {
+            "source": "Fictional demo review",
+            "author": "Demo traveller",
+            "text": "A calm base for an early start. This quote is invented."
+          }
+        ]
+      }
     }
   ],
   "days": [
@@ -158,62 +465,107 @@
       "date": "2027-05-10",
       "stopId": "evora",
       "sleep": "Évora",
-      "plan": "Old town walk, then an unhurried dinner",
+      "plan": "Old town walk; market picnic before the afternoon check-in",
       "workStatus": "afk"
     },
     {
       "date": "2027-05-11",
       "stopId": "evora",
       "sleep": "Évora",
-      "plan": "Museum morning; afternoon left open",
-      "workStatus": "afk"
+      "plan": "Museum morning; leave a buffer for a work call",
+      "workStatus": "work"
     },
     {
       "date": "2027-05-12",
       "stopId": "lagos",
       "sleep": "Lagos",
-      "plan": "Drive to the coast, settle in",
+      "plan": "Drive after breakfast; stop for groceries before the coast",
       "workStatus": "afk"
     },
     {
       "date": "2027-05-13",
       "stopId": "lagos",
       "sleep": "Lagos",
-      "plan": "Clifftop walk if the weather allows",
+      "plan": "Clifftop trail; reserve the afternoon for swimming",
       "workStatus": "afk"
     },
     {
       "date": "2027-05-14",
       "stopId": "lagos",
       "sleep": "Lagos",
-      "plan": "Beach morning; keep the evening free",
+      "plan": "Boat outing if weather permits; otherwise local galleries",
       "workStatus": "afk"
     },
     {
       "date": "2027-05-15",
       "stopId": "setubal",
       "sleep": "Setúbal",
-      "plan": "Return via the natural park",
+      "plan": "Bus transfer; collect the rental car the next morning",
       "workStatus": "weekend"
     },
     {
       "date": "2027-05-16",
+      "stopId": "nazare",
+      "sleep": "Nazaré",
+      "plan": "Coastal drive with a long lunch break",
+      "workStatus": "weekend"
+    },
+    {
+      "date": "2027-05-17",
+      "stopId": "nazare",
+      "sleep": "Nazaré",
+      "plan": "Beach morning; keep the late afternoon free",
+      "workStatus": "afk"
+    },
+    {
+      "date": "2027-05-18",
+      "stopId": "nazare",
+      "sleep": "Nazaré",
+      "plan": "Remote work until noon; sunset walk along the bay",
+      "workStatus": "work"
+    },
+    {
+      "date": "2027-05-19",
+      "stopId": "sintra",
+      "sleep": "Sintra",
+      "plan": "Train connection; leave luggage before the palace visit",
+      "workStatus": "afk"
+    },
+    {
+      "date": "2027-05-20",
+      "stopId": "sintra",
+      "sleep": "Sintra",
+      "plan": "Garden walks and an early dinner before packing",
+      "workStatus": "afk"
+    },
+    {
+      "date": "2027-05-21",
       "stopId": null,
       "sleep": "Home",
-      "plan": "Coffee, pack, and drive home",
-      "workStatus": "weekend"
+      "plan": "Train home after breakfast; return borrowed travel gear",
+      "workStatus": "afk"
     }
   ],
   "costs": [
     {
       "id": "meals",
-      "label": "Meals & groceries",
-      "amount": 300
+      "label": "Meals & groceries · 11 nights",
+      "amount": 540
     },
     {
       "id": "visits",
-      "label": "Museum & park tickets",
-      "amount": 60
+      "label": "Museum & palace tickets",
+      "amount": 128
+    },
+    {
+      "id": "rental",
+      "label": "Rental car · 8 days",
+      "amount": 320
+    },
+    {
+      "id": "parking",
+      "label": "Parking & toll allowance",
+      "amount": 85
     }
   ],
   "rev": 0

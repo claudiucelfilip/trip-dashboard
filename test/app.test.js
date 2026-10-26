@@ -125,3 +125,26 @@ test('optional authentication has no default password', async () => {
     assert.equal((await fetch(url, { headers: { Authorization: 'Basic ' + Buffer.from('demo-user:wrong').toString('base64') } })).status, 401);
   } finally { child.kill(); await new Promise(r => child.once('exit', r)); fs.rmSync(authDir, { recursive: true, force: true }); }
 });
+
+test('runtime Google configuration survives edits without entering saved state', async () => {
+  const state = fs.mkdtempSync(path.join(os.tmpdir(), 'trip-map-test-'));
+  const child = spawn(process.execPath, ['server.js'], { cwd: path.join(__dirname, '..'), env: { PATH: process.env.PATH, HOME: os.homedir(), PORT: '0', TRIP_DEMO: '1', TRIP_DATA_DIR: state, TRIP_NETWORK: '1', GOOGLE_MAPS_BROWSER_KEY: 'browser-test-value', GOOGLE_PLACES_API_KEY: 'server-test-value' }, stdio: ['ignore','pipe','pipe'] });
+  try {
+    const url = await new Promise((resolve, reject) => { child.stdout.on('data', b => { const m = b.toString().match(/http:\/\/127.0.0.1:\d+/); if (m) resolve(m[0]); }); child.once('error', reject); child.once('exit', () => reject(new Error('Map server failed'))); });
+    for (const method of ['GET','PUT']) {
+      const response = await fetch(url + '/coast-demo/api/' + (method === 'GET' ? 'data' : 'config'), { method, ...(method === 'PUT' ? { headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tripName: 'Map edit check' }) } : {}) });
+      assert.equal(response.status, 200);
+      const text = await response.text();
+      const body = JSON.parse(text);
+      assert.equal(body.config.capabilities.network, true);
+      assert.equal(body.config.capabilities.places, true);
+      assert.equal(body.config.mapsKey, 'browser-test-value');
+      assert.equal(text.includes('server-test-value'), false);
+    }
+    const stored = fs.readFileSync(path.join(state, 'coast-demo.json'), 'utf8');
+    assert.equal(stored.includes('browser-test-value'), false);
+    assert.equal(stored.includes('server-test-value'), false);
+    assert.equal(stored.includes('capabilities'), false);
+    assert.equal((await fetch(url + '/coast-demo/api/places/details?placeId=../invalid')).status, 400);
+  } finally { child.kill(); await new Promise(r => child.once('exit', r)); fs.rmSync(state, { recursive: true, force: true }); }
+});
